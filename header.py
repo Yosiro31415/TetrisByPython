@@ -39,12 +39,17 @@ class DrowingManager:
         self.screen = pygame.display.set_mode((100, 100))
         pygame.display.set_caption("tetris")
 
+    def updateDisplay(self):
+        pygame.display.update()
+
     def main(self):
         self.time += 0.001
+        print(self.time)
         self.screen.fill(
             (abs(256. * ma.sin(self.time + 0 * ma.pi / 3.)),
              abs(256. * ma.sin(self.time + 1 * ma.pi / 3.)),
              abs(256. * ma.sin(self.time + 2 * ma.pi / 3.))))
+        self.updateDisplay()
 
 
 class GameManager:
@@ -52,11 +57,11 @@ class GameManager:
     dManager = 0
     iManager = 0
     listKey = []
-
+    
     def __init__(self):
+        pygame.init()
         self.dManager = DrowingManager(self)
         self.iManager = InputManager(self)
-        pygame.init()
         self.isRunning = True
         return
 
@@ -64,7 +69,7 @@ class GameManager:
         self.listKey = self.iManager.main()
 
     def testMove(self):
-        pygame.event.pump()  # おまじない
+        pygame.event.pump()  # おまじない(空のイベントを呼び出して，更新してるらしい)
         print(self.listKey)
         if "w" in self.listKey:
             print("w")
