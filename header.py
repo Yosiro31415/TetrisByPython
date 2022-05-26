@@ -2,46 +2,45 @@ from pygame.locals import *
 import pygame
 import sys
 import math as ma
-from Enum import enum
 
-
-class KEY(enum):
-    q = 0
-    w = 1
-    e = 2
-    a = 3
-    s = 4
-    d = 5
 
 class InputManager:
     gManager = 0
 
     def __init__(self, gManager):
         self.gManager = gManager
-        pygame.key.set_repeat(delay, 100)
 
     def main(self):
         listKey = []
         if pygame.key.get_focused():
-            if pygame.key.get_pressed()["w"]:
+            if pygame.key.get_pressed()[K_w]:
                 listKey.append("w")
-            if pygame.key.get_pressed()["a"]:
+            if pygame.key.get_pressed()[K_a]:
                 listKey.append("a")
-            if pygame.key.get_pressed()["s"]:
+            if pygame.key.get_pressed()[K_s]:
                 listKey.append("s")
-            if pygame.key.get_pressed()["d"]:
+            if pygame.key.get_pressed()[K_d]:
                 listKey.append("d")
+            if pygame.key.get_pressed()[K_q]:
+                listKey.append("q")
+            if pygame.key.get_pressed()[K_e]:
+                listKey.append("e")
+
         return listKey
 
 
 class DrowingManager:
     gManager = 0
+    screen = 0
+    time = 0.
 
     def __init__(self, gManager):
         self.gManager = gManager
-        pass
+        self.screen = pygame.display.set_mode((100, 100))
+        pygame.display.set_caption("tetris")
 
     def main(self):
+        self.time += 0.001
         self.screen.fill(
             (abs(256. * ma.sin(self.time + 0 * ma.pi / 3.)),
              abs(256. * ma.sin(self.time + 1 * ma.pi / 3.)),
@@ -50,25 +49,42 @@ class DrowingManager:
 
 class GameManager:
     isRunning = False
-    screen = 0
-    time = 0
-    DManager = DrowingManager(self)
-    IManager = InputManager(self)
+    dManager = 0
+    iManager = 0
     listKey = []
+
     def __init__(self):
+        self.dManager = DrowingManager(self)
+        self.iManager = InputManager(self)
         pygame.init()
-        self.screen = pygame.display.set_mode((3000, 2000))
-        pygame.display.set_caption("tetris")
         self.isRunning = True
         return
+
+    def getKeyList(self):
+        self.listKey = self.iManager.main()
+
     def testMove(self):
-        pass
+        pygame.event.pump()  # おまじない
+        print(self.listKey)
+        if "w" in self.listKey:
+            print("w")
+        if "a" in self.listKey:
+            print("a")
+        if "s" in self.listKey:
+            print("s")
+        if "d" in self.listKey:
+            print("d")
+        if "q" in self.listKey:
+            self.isRunning = False
+            return False
+        return True
+
     def mainLoop(self):
-        listKey = Imanager
+        self.iManager.main()
         if self.isRunning:
-            self.time += 0.005
-            self.DManager.DrowingMain()
-            pygame.display.update()
+            self.getKeyList()
+            self.testMove()
+            self.dManager.main()
             return True
         else:
             return False

@@ -1,11 +1,11 @@
 import header as hd
 
 def main():
-    core = hd.CoreManager()
+    game = hd.GameManager()
     try:
         if False:
             raise ValueError("error")
-        while(core.mainLoop()):
+        while(game.mainLoop()):
             pass
 
     except ValueError as error:
