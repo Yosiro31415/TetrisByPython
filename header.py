@@ -5,7 +5,6 @@ import math as ma
 
 
 class InputManager:
-    gManager = 0
     def __init__(self, gManager):
         self.gManager = gManager
     def main(self):
