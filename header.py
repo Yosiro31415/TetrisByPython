@@ -6,10 +6,8 @@ import math as ma
 
 class InputManager:
     gManager = 0
-
     def __init__(self, gManager):
         self.gManager = gManager
-
     def main(self):
         listKey = []
         if pygame.key.get_focused():
@@ -25,16 +23,12 @@ class InputManager:
                 listKey.append("q")
             if pygame.key.get_pressed()[K_e]:
                 listKey.append("e")
-
         return listKey
 
 
 class DrowingManager:
-    gManager = 0
-    screen = 0
-    time = 0.
-
     def __init__(self, gManager):
+        self.flame = 0
         self.gManager = gManager
         self.screen = pygame.display.set_mode((100, 100))
         pygame.display.set_caption("tetris")
@@ -43,26 +37,23 @@ class DrowingManager:
         pygame.display.update()
 
     def main(self):
-        self.time += 0.001
-        print(self.time)
+        self.flame += 1
+        print(self.flame)
         self.screen.fill(
-            (abs(256. * ma.sin(self.time + 0 * ma.pi / 3.)),
-             abs(256. * ma.sin(self.time + 1 * ma.pi / 3.)),
-             abs(256. * ma.sin(self.time + 2 * ma.pi / 3.))))
+            (abs(256. * ma.sin(self.flame / 1000. + 0 * ma.pi / 3.)),
+             abs(256. * ma.sin(self.flame / 1000. + 1 * ma.pi / 3.)),
+             abs(256. * ma.sin(self.flame / 1000. + 2 * ma.pi / 3.))))
         self.updateDisplay()
 
 
 class GameManager:
-    isRunning = False
-    dManager = 0
-    iManager = 0
-    listKey = []
-    
+
     def __init__(self):
         pygame.init()
         self.dManager = DrowingManager(self)
         self.iManager = InputManager(self)
         self.isRunning = True
+        self.listKey = []
         return
 
     def getKeyList(self):
