@@ -7,6 +7,7 @@ import math as ma
 class InputManager:
     def __init__(self, gManager):
         self.gManager = gManager
+
     def main(self):
         listKey = []
         if pygame.key.get_focused():
@@ -31,9 +32,11 @@ class DrowingManager:
         self.gManager = gManager
         self.screen = pygame.display.set_mode((100, 100))
         pygame.display.set_caption("tetris")
+        self.oldTime = pygame.time.get_ticks
 
     def updateDisplay(self):
         pygame.display.update()
+        return True
 
     def main(self):
         self.flame += 1
@@ -43,6 +46,7 @@ class DrowingManager:
              abs(256. * ma.sin(self.flame / 1000. + 1 * ma.pi / 3.)),
              abs(256. * ma.sin(self.flame / 1000. + 2 * ma.pi / 3.))))
         self.updateDisplay()
+        return True
 
 
 class GameManager:
@@ -53,7 +57,9 @@ class GameManager:
         self.iManager = InputManager(self)
         self.isRunning = True
         self.listKey = []
+        self.instClock = pygame.time.Clock()
         return
+
 
     def getKeyList(self):
         self.listKey = self.iManager.main()
@@ -62,19 +68,20 @@ class GameManager:
         pygame.event.pump()  # おまじない(空のイベントを呼び出して，更新してるらしい)
         print(self.listKey)
         if "w" in self.listKey:
-            print("w")
+            pass
         if "a" in self.listKey:
-            print("a")
+            pass
         if "s" in self.listKey:
-            print("s")
+            pass
         if "d" in self.listKey:
-            print("d")
+            pass
         if "q" in self.listKey:
             self.isRunning = False
-            return False
         return True
 
     def mainLoop(self):
+        self.instClock.tick_busy_loop(60)
+        print(self.instClock.get_fps())
         self.iManager.main()
         if self.isRunning:
             self.getKeyList()
