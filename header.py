@@ -30,9 +30,27 @@ class DrowingManager:
     def __init__(self, gManager):
         self.flame = 0
         self.gManager = gManager
-        self.screen = pygame.display.set_mode((100, 100))
+        self.DISPLAY_WIDTH = 1000
+        self.DISPLAY_HEIGHT = 500
+        self.lenCell = 20
+        self.        colar = (0, 100, 0)
+        self.screen = pygame.display.set_mode(
+            (self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT))
         pygame.display.set_caption("tetris")
         self.oldTime = pygame.time.get_ticks
+
+    def drawReactAsBoard(self, board):
+        for i in range(0, len(board)-1):
+            for j in range(0, len(board[0]) - 1):
+                y = self.DISPLAY_HEIGHT
+                x_0 = self.DISPLAY_WIDTH / 2 - self.lenCell * len(board[0]) / 2
+                left = x_0 + j * self.lenCell
+                top = 30 + i * self.lenCell
+                rect = Rect(left, top, self.lenCell, self.lenCell)
+                self.drawReact(self.colar, rect)
+
+    def drawReact(self, colar, rect):
+        pygame.draw.rect(self.screen, colar, rect)
 
     def updateDisplay(self):
         pygame.display.update()
@@ -45,6 +63,8 @@ class DrowingManager:
             (abs(256. * ma.sin(self.flame / 1000. + 0 * ma.pi / 3.)),
              abs(256. * ma.sin(self.flame / 1000. + 1 * ma.pi / 3.)),
              abs(256. * ma.sin(self.flame / 1000. + 2 * ma.pi / 3.))))
+        board = [[0] * 10 for i in range(20)]
+        self.drawReactAsBoard(board)
         self.updateDisplay()
         return True
 
@@ -59,7 +79,6 @@ class GameManager:
         self.listKey = []
         self.instClock = pygame.time.Clock()
         return
-
 
     def getKeyList(self):
         self.listKey = self.iManager.main()
