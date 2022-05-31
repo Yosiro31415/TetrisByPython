@@ -33,21 +33,26 @@ class DrowingManager:
         self.DISPLAY_WIDTH = 1000
         self.DISPLAY_HEIGHT = 500
         self.lenCell = 20
-        self.        colar = (0, 100, 0)
+        self.colarBlock = (0, 100, 0)
+        self.colarEmpty = (255, 255, 255)
         self.screen = pygame.display.set_mode(
             (self.DISPLAY_WIDTH, self.DISPLAY_HEIGHT))
         pygame.display.set_caption("tetris")
         self.oldTime = pygame.time.get_ticks
 
     def drawReactAsBoard(self, board):
-        for i in range(0, len(board)-1):
-            for j in range(0, len(board[0]) - 1):
-                y = self.DISPLAY_HEIGHT
-                x_0 = self.DISPLAY_WIDTH / 2 - self.lenCell * len(board[0]) / 2
+        y = self.DISPLAY_HEIGHT
+        x_0 = self.DISPLAY_WIDTH / 2 - \
+            self.lenCell * len(board[0]) / 2
+        for i in range(0, len(board)):
+            for j in range(0, len(board[0])):
                 left = x_0 + j * self.lenCell
                 top = 30 + i * self.lenCell
                 rect = Rect(left, top, self.lenCell, self.lenCell)
-                self.drawReact(self.colar, rect)
+                if board[i][j] == 0:
+                    self.drawReact(self.colarEmpty, rect)
+                else:
+                    self.drawReact(self.colarBlock, rect)
 
     def drawReact(self, colar, rect):
         pygame.draw.rect(self.screen, colar, rect)
@@ -64,13 +69,12 @@ class DrowingManager:
              abs(256. * ma.sin(self.flame / 1000. + 1 * ma.pi / 3.)),
              abs(256. * ma.sin(self.flame / 1000. + 2 * ma.pi / 3.))))
         board = [[0] * 10 for i in range(20)]
-        self.drawReactAsBoard(board)
+        self.drawReactAsBoard(self.gManager.board)
         self.updateDisplay()
         return True
 
 
 class GameManager:
-
     def __init__(self):
         pygame.init()
         self.dManager = DrowingManager(self)
@@ -78,7 +82,51 @@ class GameManager:
         self.isRunning = True
         self.listKey = []
         self.instClock = pygame.time.Clock()
+        self.board = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ]
+        self.listMino = [
+            [[1, 1, 1, 1],
+             [0, 0, 0, 0]],
+            [[1, 1, 0, 0],
+             [0, 1, 1, 0]],
+            [[0, 0, 1, 1],
+             [0, 1, 1, 0]],
+            [[0, 1, 1, 0],
+             [0, 1, 1, 0]],
+            [[0, 1, 1, 1],
+             [0, 0, 0, 1]],
+            [[1, 1, 1, 0],
+             [1, 0, 0, 0]],
+            [[1, 1, 1, 0],
+             [0, 1, 0, 0]]
+        ]
         return
+
+    def addMinoToBoard(self):
+        board = self.board
+        for i in range(0, len(self.listMino[0])):
+            for j in range(0, len(self.listMino[0][i])):
+                if self.listMino[0][i][j] == 1:
+                    self.board[i][j] = 1
 
     def getKeyList(self):
         self.listKey = self.iManager.main()
@@ -87,10 +135,12 @@ class GameManager:
         pygame.event.pump()  # おまじない(空のイベントを呼び出して，更新してるらしい)
         print(self.listKey)
         if "w" in self.listKey:
+            self.addMinoToBoard()
             pass
         if "a" in self.listKey:
             pass
         if "s" in self.listKey:
+            print(self.board)
             pass
         if "d" in self.listKey:
             pass
